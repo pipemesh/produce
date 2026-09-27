@@ -1,0 +1,40 @@
+name: PipeMesh output
+description: Emit an entry of the dispatching PipeMesh job's output manifest — an image or a package the run published.
+author: PipeMesh
+branding:
+  icon: upload
+  color: gray-dark
+inputs:
+  key:
+    description: The output key the PipeMesh job declares (outputs: { image: oci }).
+    required: true
+  type:
+    description: oci or npm.
+    required: true
+  ref:
+    description: Where it lives — registry/repo for oci, name@version for npm.
+    required: true
+  digest:
+    description: sha256:… for oci; the package's integrity (sha512-…) for npm.
+    required: true
+  verify:
+    description: Check the entry resolves before emitting it (docker/crane for oci, npm view for npm).
+    required: false
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - id: emit
+      shell: bash
+      env:
+        PM_KEY: ${{ inputs.key }}
+        PM_TYPE: ${{ inputs.type }}
+        PM_REF: ${{ inputs.ref }}
+        PM_DIGEST: ${{ inputs.digest }}
+        PM_VERIFY: ${{ inputs.verify }}
+      run: '"$GITHUB_ACTION_PATH/output.sh"'
+    - uses: actions/upload-artifact@v4
+      with:
+        name: pipemesh-outputs-${{ inputs.key }}
+        path: ${{ steps.emit.outputs.dir }}
+        retention-days: 7
