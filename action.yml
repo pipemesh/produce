@@ -1,4 +1,4 @@
-name: PipeMesh output
+name: PipeMesh produce
 description: Emit an entry of the dispatching PipeMesh job's output manifest — an image or a package the run published.
 author: PipeMesh
 branding:
@@ -6,7 +6,7 @@ branding:
   color: gray-dark
 inputs:
   key:
-    description: The output key the PipeMesh job declares (outputs: { image: oci }).
+    description: The output key the PipeMesh job declares (produces: { image: oci }).
     required: true
   type:
     description: oci or npm.
@@ -32,9 +32,9 @@ runs:
         PM_REF: ${{ inputs.ref }}
         PM_DIGEST: ${{ inputs.digest }}
         PM_VERIFY: ${{ inputs.verify }}
-      run: '"$GITHUB_ACTION_PATH/output.sh"'
+      run: '"$GITHUB_ACTION_PATH/produce.sh"'
     - uses: actions/upload-artifact@v4
       with:
-        name: pipemesh-outputs-${{ inputs.key }}
+        name: pipemesh-produces-${{ inputs.key }}
         path: ${{ steps.emit.outputs.dir }}
         retention-days: 7

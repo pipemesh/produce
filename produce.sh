@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One entry of the dispatching job's output manifest, as a line of a
-# pipemesh-outputs-<key> artifact that PipeMesh imports when the run
+# pipemesh-produces-<key> artifact that PipeMesh imports when the run
 # succeeds (DESIGN-V59 §7). Verified here, where the credentials are.
 set -euo pipefail
 
@@ -27,7 +27,7 @@ if [ "$PM_VERIFY" = true ]; then
   esac
 fi
 
-dir="$RUNNER_TEMP/pipemesh-outputs-$PM_KEY"
+dir="$RUNNER_TEMP/pipemesh-produces-$PM_KEY"
 mkdir -p "$dir"
 python3 - "$dir/outputs.jsonl" <<'PY'
 import json, os, sys
