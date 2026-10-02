@@ -1,12 +1,12 @@
-name: PipeMesh produce
-description: Emit an entry of the dispatching PipeMesh job's output manifest — an image or a package the run published.
-author: PipeMesh
+name: Pipemesh produce
+description: Emit an entry of the dispatching Pipemesh job's output manifest — an image or a package the run published.
+author: Pipemesh
 branding:
   icon: upload
   color: gray-dark
 inputs:
   key:
-    description: The output key the PipeMesh job declares (produces: { image: oci }).
+    description: The output key the Pipemesh job declares (produces: { image: oci }).
     required: true
   type:
     description: oci or npm.

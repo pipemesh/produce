@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One entry of the dispatching job's output manifest, as a line of a
-# pipemesh-produces-<key> artifact that PipeMesh imports when the run
+# pipemesh-produces-<key> artifact that Pipemesh imports when the run
 # succeeds (DESIGN-V59 §7). Verified here, where the credentials are.
 set -euo pipefail
 

@@ -1,8 +1,8 @@
 # pipemesh/produce
 
-Emits an entry of the dispatching PipeMesh job's output manifest — an
-image or a package this run published — so PipeMesh jobs can consume it
-by key ([DESIGN-V59 §7](https://pipemesh.dev/docs)).
+Emits an entry of the dispatching Pipemesh job's output manifest — an
+image or a package this run published — so Pipemesh jobs can consume it
+by key ([DESIGN-V59 §7](https://pipemesh.io/docs)).
 
 ```yaml
 # pipemesh.yaml
