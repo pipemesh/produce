@@ -6,7 +6,7 @@ branding:
   color: gray-dark
 inputs:
   key:
-    description: The output key the Pipemesh job declares (produces: { image: oci }).
+    description: "The output key the Pipemesh job declares (produces: { image: oci })."
     required: true
   type:
     description: oci or npm.
