@@ -67,6 +67,11 @@ steps:
 - **The run proves itself** with its own GitHub OIDC token, as
   `pipemesh/consume` does: the job needs `id-token: write`, and
   `pipemesh-url` names the instance (default `https://pipemesh.io`).
+- **Only the run Pipemesh dispatched gets a place:** its token must be
+  Pipemesh's dispatch, on the ref Pipemesh dispatched on; another run of
+  the workflow is refused. The step waits up to two minutes for Pipemesh
+  to match the run to its job; put `pipemesh_run` in the workflow's
+  `run-name:`.
 - **The push needs a login:** `pipemesh/consume` with `registry-login:
   true` gives one. Jib, crane and ko push there as well as docker:
   `./gradlew jib -Djib.to.image="${{ steps.place.outputs.ref }}"`.

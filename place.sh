@@ -25,8 +25,14 @@ echo "::add-mask::$token"
 
 answer=$(mktemp)
 trap 'rm -f "$answer"' EXIT
-code=$(curl -sS -o "$answer" -w '%{http_code}' -X POST -H "Authorization: Bearer $token" \
-  "$PM_URL/api/runtime/actions/images/place?run=$(urlencode "$PM_RUN")&key=$(urlencode "$PM_KEY")" || echo 000)
+# 409: Pipemesh hasn't matched this run to its job yet, which a place needs
+# (only the run Pipemesh dispatched pushes); it takes a few seconds.
+for attempt in $(seq 1 24); do
+  code=$(curl -sS -o "$answer" -w '%{http_code}' -X POST -H "Authorization: Bearer $token" \
+    "$PM_URL/api/runtime/actions/images/place?run=$(urlencode "$PM_RUN")&key=$(urlencode "$PM_KEY")" || echo 000)
+  [ "$code" = 409 ] && [ "$attempt" -lt 24 ] || break
+  sleep 5
+done
 if [ "$code" != 200 ]; then
   echo "::error::Pipemesh refused a place for $PM_KEY (HTTP $code): $(cat "$answer" 2>/dev/null)"
   exit 1
