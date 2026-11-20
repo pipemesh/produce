@@ -1,5 +1,5 @@
 name: Pipemesh produce
-description: Emit an entry of the dispatching Pipemesh job's output manifest — an image the run published.
+description: Emit an entry of the dispatching Pipemesh job's output manifest — an image the run published — or get the place in Pipemesh's registry to push it to.
 author: Pipemesh
 branding:
   icon: upload
@@ -9,22 +9,50 @@ inputs:
     description: "The output key the Pipemesh job declares (produces: { image: oci })."
     required: true
   type:
-    description: oci.
-    required: true
+    description: "oci (not with place: true)."
+    required: false
+    default: oci
   ref:
-    description: Where it lives — registry/repo.
-    required: true
+    description: "Where it lives — registry/repo (not with place: true)."
+    required: false
+    default: ""
   digest:
-    description: The image's sha256:… digest.
-    required: true
+    description: "The image's sha256:… digest (not with place: true)."
+    required: false
+    default: ""
   verify:
     description: Check the entry resolves before emitting it (docker or crane).
     required: false
     default: "true"
+  place:
+    description: "Emit nothing; output where to push the key's image in Pipemesh's registry, as ref. Pipemesh records what the run pushed there when the run succeeds."
+    required: false
+    default: "false"
+  pipemesh-url:
+    description: "The Pipemesh instance that dispatched this run (with place: true)."
+    required: false
+    default: https://pipemesh.io
+  run:
+    description: "The job run this workflow was dispatched for, the pipemesh_run input (with place: true)."
+    required: false
+    default: ${{ github.event.inputs.pipemesh_run }}
+outputs:
+  ref:
+    description: "With place: true, the key's place: <registry>/<repository>:<tag>, the tag being the job run's own."
+    value: ${{ steps.place.outputs.ref }}
 runs:
   using: composite
   steps:
+    - id: place
+      if: inputs.place == 'true'
+      shell: bash
+      env:
+        PM_KEY: ${{ inputs.key }}
+        PM_URL: ${{ inputs.pipemesh-url }}
+        PM_RUN: ${{ inputs.run }}
+      run: '"$GITHUB_ACTION_PATH/place.sh"'
     - id: emit
+      if: inputs.place != 'true'
       shell: bash
       env:
         PM_KEY: ${{ inputs.key }}
@@ -33,7 +61,8 @@ runs:
         PM_DIGEST: ${{ inputs.digest }}
         PM_VERIFY: ${{ inputs.verify }}
       run: '"$GITHUB_ACTION_PATH/produce.sh"'
-    - uses: actions/upload-artifact@v4
+    - if: inputs.place != 'true'
+      uses: actions/upload-artifact@v4
       with:
         name: pipemesh-produces-${{ inputs.key }}
         path: ${{ steps.emit.outputs.dir }}
