@@ -1,5 +1,5 @@
 name: Pipemesh produce
-description: Emit an entry of the dispatching Pipemesh job's output manifest — an image or a package the run published.
+description: Emit an entry of the dispatching Pipemesh job's output manifest — an image the run published.
 author: Pipemesh
 branding:
   icon: upload
@@ -9,16 +9,16 @@ inputs:
     description: "The output key the Pipemesh job declares (produces: { image: oci })."
     required: true
   type:
-    description: oci or npm.
+    description: oci.
     required: true
   ref:
-    description: Where it lives — registry/repo for oci, name@version for npm.
+    description: Where it lives — registry/repo.
     required: true
   digest:
-    description: sha256:… for oci; the package's integrity (sha512-…) for npm.
+    description: The image's sha256:… digest.
     required: true
   verify:
-    description: Check the entry resolves before emitting it (docker/crane for oci, npm view for npm).
+    description: Check the entry resolves before emitting it (docker or crane).
     required: false
     default: "true"
 runs:

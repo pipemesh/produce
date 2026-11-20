@@ -1,8 +1,8 @@
 # pipemesh/produce
 
 Emits an entry of the dispatching Pipemesh job's output manifest — an
-image or a package this run published — so Pipemesh jobs can consume it
-by key ([DESIGN-V59 §7](https://pipemesh.io/docs)).
+image this run published — so Pipemesh jobs can consume it by key
+([DESIGN-V59 §7](https://pipemesh.io/docs)).
 
 ```yaml
 # pipemesh.yaml
@@ -23,6 +23,6 @@ deploy:
     digest: ${{ steps.push.outputs.digest }}
 ```
 
-The entry is verified here (docker or crane for `oci`, `npm view` for
-`npm`) and uploaded as the `pipemesh-produces-<key>` artifact; a file entry
-needs no action — upload an artifact named after its key.
+The entry is verified here (docker or crane) and uploaded as the
+`pipemesh-produces-<key>` artifact; a file entry needs no action — upload
+an artifact named after its key.
